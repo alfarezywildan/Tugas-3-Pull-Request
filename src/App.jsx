@@ -8,23 +8,50 @@ function App() {
   const [products, setProducts] = useState(initialProducts);
   const [searchQuery, setSearchQuery] = useState("");
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  function handleAddProduct(newProductData) {
-    const nextId =
-      products.length > 0 ? Math.max(...products.map((p) => p.id)) + 1 : 1;
+  function handleOpenAddModal() {
+    setEditingProduct(null);
+    setIsFormModalOpen(true);
+  }
 
-    const newProduct = {
-      id: nextId,
-      name: newProductData.name,
-      price: newProductData.price,
-    };
+  function handleOpenEditModal(product) {
+    setEditingProduct(product);
+    setIsFormModalOpen(true);
+  }
 
-    setProducts([...products, newProduct]);
+  function handleCloseFormModal() {
     setIsFormModalOpen(false);
+    setEditingProduct(null);
+  }
+
+  function handleSaveProduct(productData) {
+    if (editingProduct) {
+      setProducts(
+        products.map((item) =>
+          item.id === editingProduct.id
+            ? { ...item, name: productData.name, price: productData.price }
+            : item
+        )
+      );
+    } else {
+      const nextId =
+        products.length > 0 ? Math.max(...products.map((p) => p.id)) + 1 : 1;
+
+      const newProduct = {
+        id: nextId,
+        name: productData.name,
+        price: productData.price,
+      };
+
+      setProducts([...products, newProduct]);
+    }
+
+    handleCloseFormModal();
   }
 
   return (
@@ -39,7 +66,7 @@ function App() {
         <button
           type="button"
           className="btn btn-primary"
-          onClick={() => setIsFormModalOpen(true)}
+          onClick={handleOpenAddModal}
         >
           + Tambah Produk
         </button>
@@ -73,7 +100,10 @@ function App() {
         <span className="product-count">{products.length} produk</span>
       </div>
 
-      <ProductList products={filteredProducts} />
+      <ProductList
+        products={filteredProducts}
+        onEdit={handleOpenEditModal}
+      />
 
       <p className="footer-summary">
         Menampilkan {filteredProducts.length} dari {products.length} produk
@@ -81,8 +111,9 @@ function App() {
 
       <ProductFormModal
         isOpen={isFormModalOpen}
-        onClose={() => setIsFormModalOpen(false)}
-        onSubmit={handleAddProduct}
+        onClose={handleCloseFormModal}
+        onSubmit={handleSaveProduct}
+        initialData={editingProduct}
       />
     </main>
   );
