@@ -1,0 +1,78 @@
+.app-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.page-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #0b192c;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.page-subtitle {
+  font-size: 1.05rem;
+  color: #475569;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1.5px solid transparent;
+}
+
+.btn-primary {
+  background-color: #0052ff;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #0043d1;
+}
+
+.btn-outline-primary {
+  background-color: #ffffff;
+  color: #0052ff;
+  border-color: #0052ff;
+}
+
+.btn-outline-primary:hover {
+  background-color: #eff6ff;
+}
+
+.btn-outline-danger {
+  background-color: #ffffff;
+  color: #d92d20;
+  border-color: #f0756b;
+}
+
+.btn-outline-danger:hover {
+  background-color: #fef2f2;
+}
+
+.btn-danger {
+  background-color: #dc2626;
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background-color: #b91c1c;
+}
