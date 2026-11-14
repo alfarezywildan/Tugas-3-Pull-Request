@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { initialProducts } from "./data/initialProducts";
+import ProductList from "./components/ProductList";
 import "./App.css";
 
 function App() {
   const [products] = useState(initialProducts);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <main className="app-container">
@@ -19,7 +25,39 @@ function App() {
         </button>
       </header>
 
-      <p>Total data awal: {products.length} produk</p>
+      <div className="toolbar">
+        <div className="search-wrapper">
+          <svg
+            className="search-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Cari nama produk..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <span className="product-count">{products.length} produk</span>
+      </div>
+
+      <ProductList products={filteredProducts} />
+
+      <p className="footer-summary">
+        Menampilkan {filteredProducts.length} dari {products.length} produk
+      </p>
     </main>
   );
 }
