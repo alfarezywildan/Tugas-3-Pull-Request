@@ -1,9 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function ProductFormModal({ isOpen, onClose, onSubmit }) {
+function ProductFormModal({ isOpen, onClose, onSubmit, initialData = null }) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [error, setError] = useState("");
+
+  const isEditMode = Boolean(initialData);
+
+  useEffect(() => {
+    if (isOpen) {
+      if (initialData) {
+        setName(initialData.name);
+        setPrice(String(initialData.price));
+      } else {
+        setName("");
+        setPrice("");
+      }
+      setError("");
+    }
+  }, [isOpen, initialData]);
 
   if (!isOpen) {
     return null;
@@ -54,8 +69,18 @@ function ProductFormModal({ isOpen, onClose, onSubmit }) {
           &times;
         </button>
 
-        <h2 className="modal-title">Tambah Produk</h2>
-        <p className="modal-subtitle">Masukkan informasi produk baru.</p>
+        <h2 className="modal-title">
+          {isEditMode ? "Edit Produk" : "Tambah Produk"}
+        </h2>
+        <p className="modal-subtitle">
+          {isEditMode
+            ? "Perbarui informasi produk yang dipilih."
+            : "Masukkan informasi produk baru."}
+        </p>
+
+        {isEditMode && (
+          <p className="modal-product-id">ID: {initialData.id}</p>
+        )}
 
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-group">
@@ -104,7 +129,7 @@ function ProductFormModal({ isOpen, onClose, onSubmit }) {
               Batal
             </button>
             <button type="submit" className="btn btn-primary">
-              Simpan Produk
+              {isEditMode ? "Simpan Perubahan" : "Simpan Produk"}
             </button>
           </div>
         </form>

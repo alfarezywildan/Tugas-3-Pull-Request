@@ -254,7 +254,14 @@
 .modal-subtitle {
   font-size: 0.95rem;
   color: #475569;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+}
+
+.modal-product-id {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 16px;
 }
 
 .modal-form {
