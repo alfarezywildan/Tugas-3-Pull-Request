@@ -2,6 +2,7 @@ import { useState } from "react";
 import { initialProducts } from "./data/initialProducts";
 import ProductList from "./components/ProductList";
 import ProductFormModal from "./components/ProductFormModal";
+import DeleteConfirmModal from "./components/DeleteConfirmModal";
 import "./App.css";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [deletingProduct, setDeletingProduct] = useState(null);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -52,6 +54,19 @@ function App() {
     }
 
     handleCloseFormModal();
+  }
+
+  function handleOpenDeleteModal(product) {
+    setDeletingProduct(product);
+  }
+
+  function handleCloseDeleteModal() {
+    setDeletingProduct(null);
+  }
+
+  function handleConfirmDelete(productId) {
+    setProducts(products.filter((item) => item.id !== productId));
+    setDeletingProduct(null);
   }
 
   return (
@@ -103,6 +118,7 @@ function App() {
       <ProductList
         products={filteredProducts}
         onEdit={handleOpenEditModal}
+        onDelete={handleOpenDeleteModal}
       />
 
       <p className="footer-summary">
@@ -114,6 +130,13 @@ function App() {
         onClose={handleCloseFormModal}
         onSubmit={handleSaveProduct}
         initialData={editingProduct}
+      />
+
+      <DeleteConfirmModal
+        isOpen={Boolean(deletingProduct)}
+        product={deletingProduct}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
       />
     </main>
   );
