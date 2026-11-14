@@ -1,15 +1,31 @@
 import { useState } from "react";
 import { initialProducts } from "./data/initialProducts";
 import ProductList from "./components/ProductList";
+import ProductFormModal from "./components/ProductFormModal";
 import "./App.css";
 
 function App() {
-  const [products] = useState(initialProducts);
+  const [products, setProducts] = useState(initialProducts);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  function handleAddProduct(newProductData) {
+    const nextId =
+      products.length > 0 ? Math.max(...products.map((p) => p.id)) + 1 : 1;
+
+    const newProduct = {
+      id: nextId,
+      name: newProductData.name,
+      price: newProductData.price,
+    };
+
+    setProducts([...products, newProduct]);
+    setIsFormModalOpen(false);
+  }
 
   return (
     <main className="app-container">
@@ -20,7 +36,11 @@ function App() {
             Kelola daftar produk dan harga dalam satu tempat.
           </p>
         </div>
-        <button type="button" className="btn btn-primary">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => setIsFormModalOpen(true)}
+        >
           + Tambah Produk
         </button>
       </header>
@@ -58,6 +78,12 @@ function App() {
       <p className="footer-summary">
         Menampilkan {filteredProducts.length} dari {products.length} produk
       </p>
+
+      <ProductFormModal
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
+        onSubmit={handleAddProduct}
+      />
     </main>
   );
 }
