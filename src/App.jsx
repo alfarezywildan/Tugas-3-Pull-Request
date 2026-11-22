@@ -1,20 +1,21 @@
 import { useState } from "react";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router";
 import { initialProducts } from "./data/initialProducts";
-import ProductList from "./components/ProductList";
+import ProductsPage from "./pages/ProductsPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import ProductFormModal from "./components/ProductFormModal";
 import DeleteConfirmModal from "./components/DeleteConfirmModal";
 import "./App.css";
 
 function App() {
   const [products, setProducts] = useState(initialProducts);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [deletingProduct, setDeletingProduct] = useState(null);
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const navigate = useNavigate();
+  const location = useLocation();
 
   function handleOpenAddModal() {
     setEditingProduct(null);
@@ -67,63 +68,39 @@ function App() {
   function handleConfirmDelete(productId) {
     setProducts(products.filter((item) => item.id !== productId));
     setDeletingProduct(null);
+
+    if (location.pathname === `/products/${productId}`) {
+      navigate("/products");
+    }
   }
 
   return (
-    <main className="app-container">
-      <header className="page-header">
-        <div>
-          <h1 className="page-title">Manajemen Produk</h1>
-          <p className="page-subtitle">
-            Kelola daftar produk dan harga dalam satu tempat.
-          </p>
-        </div>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={handleOpenAddModal}
-        >
-          + Tambah Produk
-        </button>
-      </header>
-
-      <div className="toolbar">
-        <div className="search-wrapper">
-          <svg
-            className="search-icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Cari nama produk..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <span className="product-count">{products.length} produk</span>
-      </div>
-
-      <ProductList
-        products={filteredProducts}
-        onEdit={handleOpenEditModal}
-        onDelete={handleOpenDeleteModal}
-      />
-
-      <p className="footer-summary">
-        Menampilkan {filteredProducts.length} dari {products.length} produk
-      </p>
+    <>
+      <Routes>
+        <Route path="/" element={<Navigate to="/products" replace />} />
+        <Route
+          path="/products"
+          element={
+            <ProductsPage
+              products={products}
+              onAdd={handleOpenAddModal}
+              onEdit={handleOpenEditModal}
+              onDelete={handleOpenDeleteModal}
+            />
+          }
+        />
+        <Route
+          path="/products/:id"
+          element={
+            <ProductDetailPage
+              products={products}
+              onEdit={handleOpenEditModal}
+              onDelete={handleOpenDeleteModal}
+            />
+          }
+        />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
 
       <ProductFormModal
         isOpen={isFormModalOpen}
@@ -138,7 +115,7 @@ function App() {
         onClose={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
       />
-    </main>
+    </>
   );
 }
 
