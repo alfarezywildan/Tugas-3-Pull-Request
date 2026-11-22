@@ -1,8 +1,4 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+@import "tailwindcss";
 
 body {
   font-family: "Plus Jakarta Sans", "Segoe UI", Roboto, -apple-system, sans-serif;
@@ -12,9 +8,4 @@ body {
   color: #1e293b;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-}
-
-button,
-input {
-  font-family: inherit;
 }
